@@ -1,0 +1,37 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository Code
+      uses: actions/checkout@v3
+
+    - name: Set up Python Environment
+      uses: actions/checkout@v3
+      with:
+        python-version: '3.11'
+
+    - name: Install Base Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: Run Flake8 Code Style Linter
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        # --max-line-length=127 gives us extra flexibility so the build doesn't fail over slightly long comments
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+    - name: Run Unit Tests with Pytest
+      run: |
+        pytest
