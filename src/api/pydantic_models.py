@@ -37,3 +37,7 @@ class CreditScoringRequest(BaseModel):
                 "ChannelId_WoE": -0.114
             }
         }
+
+
+
+        
